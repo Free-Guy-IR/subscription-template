@@ -14,6 +14,17 @@ import { formatRelativeExpiry, formatDate } from '@/lib/dateFormatter';
 import { RefreshCcw, Bell } from 'lucide-react';
 import { useDir } from '@/hooks/useDir';
 import { cn } from './lib/utils';
+import type { UsageDataPoint } from '@/types/user';
+
+const isUsageDataSeries = (value: unknown): value is UsageDataPoint[] => Array.isArray(value);
+
+const getChartUsageData = (stats: unknown): UsageDataPoint[] => {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) {
+    return [];
+  }
+
+  return Object.values(stats).find(isUsageDataSeries) ?? [];
+};
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -71,7 +82,7 @@ function App() {
   // Get raw announce header value
   const rawAnnounceHeader = useMemo(() => {
     if (!headers) return null;
-    return (headers as any)['announce'] || (headers as any)['Announce'] || (headers as any)['ANNOUNCE'] || null;
+    return headers.announce ?? null;
   }, [headers]);
 
   // Decode announcement message (can be URL-encoded or base64)
@@ -503,8 +514,7 @@ function App() {
               return null;
             }
 
-            const statsKey = chartData ? Object.keys(chartData.stats)[0] : undefined;
-            const usageData = statsKey && chartData ? (chartData.stats as any)[statsKey] ?? [] : [];
+            const usageData = getChartUsageData(chartData?.stats);
             const isChartLoading = !chartError && !chartData;
 
             return (

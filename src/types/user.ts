@@ -67,9 +67,7 @@ export interface ChartData {
   period: string;
   start: string;
   end: string;
-  stats: {
-    [key: string]: UsageDataPoint[];
-  };
+  stats?: Record<string, UsageDataPoint[] | null> | null;
 }
 
 export interface AppClient {
