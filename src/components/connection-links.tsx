@@ -24,6 +24,7 @@ export const ConnectionLinks = memo(({ links }: ConnectionLinksProps) => {
   const [selectedLink, setSelectedLink] = useState<ParsedLink | null>(null);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [copyAllSuccess, setCopyAllSuccess] = useState(false);
+  const [downloadingOpenVPN, setDownloadingOpenVPN] = useState(false);
   const copyAllTimeoutRef = useRef<number | null>(null);
 
   // Memoize parsed links to avoid re-parsing on every render
@@ -34,6 +35,12 @@ export const ConnectionLinks = memo(({ links }: ConnectionLinksProps) => {
     `${window.location.origin}${window.location.pathname.replace(/\/info$/, '')}`,
     []
   );
+
+  // Set from Jinja-rendered initial data - true only when the user actually
+  // has an openvpn instance (see backend's fetch_config(ConfigFormat.openvpn)
+  // check), so this tracks real access automatically as group/core
+  // assignments change, with no hardcoded protocol list here.
+  const hasOpenVPN = window.__INITIAL_DATA__?.has_openvpn ?? false;
 
   // Memoize all configs text to avoid recalculating on every render
   const allConfigsText = useMemo(() => {
@@ -86,6 +93,29 @@ export const ConnectionLinks = memo(({ links }: ConnectionLinksProps) => {
     }
   }, [t]);
 
+  const handleDownloadOpenVPN = useCallback(async () => {
+    setDownloadingOpenVPN(true);
+    try {
+      const response = await fetch(`${subscriptionUrl}/openvpn`);
+      if (!response.ok) {
+        throw new Error(`request failed: ${response.status}`);
+      }
+
+      const disposition = response.headers.get('content-disposition') || '';
+      const match = disposition.match(/filename="?([^"]+)"?/);
+      const fileName = match ? match[1] : 'config.ovpn';
+
+      const content = await response.text();
+      downloadTextFile(content, fileName);
+      toast.success(t('configActions.downloadStarted'));
+    } catch (error) {
+      console.error('Failed to download OpenVPN config:', error);
+      toast.error(t('configActions.downloadFailed'));
+    } finally {
+      setDownloadingOpenVPN(false);
+    }
+  }, [subscriptionUrl, t]);
+
   const getProtocolBadge = useCallback((protocol: ParsedLink['protocol']) => {
     if (protocol === 'unknown') return 'SUB';
     if (protocol === 'shadowsocks') return 'SS';
@@ -101,23 +131,38 @@ export const ConnectionLinks = memo(({ links }: ConnectionLinksProps) => {
           <span className="text-xl">🔗</span>
           {t('config.title')}
         </h2>
-        <button
-          onClick={handleCopyAll}
-          className={`group cursor-pointer flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-lg ${copyAllSuccess
-              ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/25'
-              : 'bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/25'
-            }`}
-          title={copyAllSuccess ? t('apps.copyAllSuccess') : t('apps.copyAll')}
-        >
-          {copyAllSuccess ? (
-            <Check className="w-4 h-4 transition-transform duration-200 animate-pulse" />
-          ) : (
-            <Files className="w-4 h-4 transition-transform duration-200 group-hover:rotate-12" />
+        <div className="flex items-center gap-2">
+          {hasOpenVPN && (
+            <button
+              onClick={handleDownloadOpenVPN}
+              disabled={downloadingOpenVPN}
+              className="group cursor-pointer flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-lg bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-70 disabled:hover:scale-100"
+              title={t('configActions.downloadOpenVPN')}
+            >
+              <Download className="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5" />
+              <span className="transition-all duration-200 group-hover:translate-x-0.5">
+                {t('configActions.downloadOpenVPN')}
+              </span>
+            </button>
           )}
-          <span className="transition-all duration-200 group-hover:translate-x-0.5">
-            {copyAllSuccess ? t('apps.copyAllSuccess') : t('apps.copyAll')}
-          </span>
-        </button>
+          <button
+            onClick={handleCopyAll}
+            className={`group cursor-pointer flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-lg ${copyAllSuccess
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/25'
+                : 'bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-primary/25'
+              }`}
+            title={copyAllSuccess ? t('apps.copyAllSuccess') : t('apps.copyAll')}
+          >
+            {copyAllSuccess ? (
+              <Check className="w-4 h-4 transition-transform duration-200 animate-pulse" />
+            ) : (
+              <Files className="w-4 h-4 transition-transform duration-200 group-hover:rotate-12" />
+            )}
+            <span className="transition-all duration-200 group-hover:translate-x-0.5">
+              {copyAllSuccess ? t('apps.copyAllSuccess') : t('apps.copyAll')}
+            </span>
+          </button>
+        </div>
       </div>
 
       <div className="max-h-[400px] overflow-y-auto space-y-2">

@@ -93,6 +93,7 @@
     "copyConfig": "Copy Config",
     "copyBase64": "Copy Base64",
     "downloadWireGuard": "Download WireGuard",
+    "downloadOpenVPN": "Download OpenVPN",
     "downloadStarted": "Download started",
     "downloadFailed": "Failed to download config"
   },

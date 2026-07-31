@@ -41,6 +41,7 @@
             } if user.next_plan else None
           } %}{{ user_data | tojson | safe }}{% else %}null{% endif %},
           links: {{ links | tojson | safe }},
+          has_openvpn: {{ has_openvpn | default(false) | tojson | safe }},
           apps: {% if apps %}{% set apps_data = [] %}{% for app in apps %}{% if app %}{% set download_links_data = [] %}{% for link in app.download_links %}{% if link %}{% set link_dict = {
             'name': link.name,
             'url': link.url,

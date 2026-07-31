@@ -4,6 +4,7 @@ export interface InitialData {
   user?: UserInfo; // User data as structured object from template
   links?: string[];
   apps?: AppClient[];
+  has_openvpn?: boolean;
 }
 
 declare global {

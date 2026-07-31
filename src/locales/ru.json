@@ -93,6 +93,7 @@
     "copyConfig": "Копировать конфиг",
     "copyBase64": "Копировать Base64",
     "downloadWireGuard": "Скачать WireGuard",
+    "downloadOpenVPN": "Скачать OpenVPN",
     "downloadStarted": "Загрузка началась",
     "downloadFailed": "Не удалось скачать конфиг"
   },
