@@ -2,6 +2,8 @@
 
 Responsive subscription page template for PasarGuard.
 
+> **Note:** This is the [Free-Guy-IR](https://github.com/Free-Guy-IR) fork of the original [PasarGuard subscription-template](https://github.com/PasarGuard/subscription-template), extended to support the fork's extra core types: an **OpenVPN Config** row (download + copy, matching the WireGuard presentation) and an **MTProto (Telegram proxy)** row (`tg://` links, copy-only - no QR code, since these links aren't meant to be scanned).
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/en.png" alt="English UI" width="40%">
   <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/fa.png" alt="Persian UI" width="30%">
@@ -16,13 +18,15 @@ Responsive subscription page template for PasarGuard.
 - QR code for connection links
 - Copy links/configs in one click, with Base64 copy available only in the QR modal
 - WireGuard links can be copied as native config or downloaded as `.conf`
+- OpenVPN gets a dedicated config row (download `.ovpn` or copy) instead of a generic link
+- MTProto (Telegram proxy, `tg://`) links get their own row with a real name instead of a generic fallback
 - [Appearance customization](#appearance-customization)
 
 ## Compatibility
 
-| Subscription Template | PasarGuard Panel |
+| Subscription Template | Panel |
 | --- | --- |
-| `v2` | `v3` |
+| `v2` | `v3` (this fork) |
 | Other versions | `v2`, `v1` |
 
 ## Quick Start (Recommended)
@@ -30,7 +34,7 @@ Responsive subscription page template for PasarGuard.
 Run installer script (choose your fallback language):
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/PasarGuard/subscription-template/main/install.sh | sudo bash -s -- --lang fa
+curl -fsSL https://raw.githubusercontent.com/Free-Guy-IR/subscription-template/main/install.sh | sudo bash -s -- --lang fa
 ```
 
 Supported values for `--lang`: `en`, `fa`, `zh`, `ru`
@@ -44,7 +48,7 @@ To install a specific release, add `--version <tag>`.
 ```sh
 sudo mkdir -p /var/lib/pasarguard/templates/subscription
 sudo wget -O /var/lib/pasarguard/templates/subscription/index.html \
-https://github.com/PasarGuard/subscription-template/releases/latest/download/index.html
+https://github.com/Free-Guy-IR/subscription-template/releases/latest/download/index.html
 ```
 
 2. Configure PasarGuard in `/opt/pasarguard/.env`:
@@ -63,7 +67,7 @@ pasarguard restart
 ## Build From Source
 
 ```sh
-git clone https://github.com/PasarGuard/subscription-template.git
+git clone https://github.com/Free-Guy-IR/subscription-template.git
 cd subscription-template
 bun install
 bun run build

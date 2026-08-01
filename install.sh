@@ -66,9 +66,9 @@ if [[ "${VERSION}" != "latest" ]]; then
   RELEASE_PATH="download/${VERSION}"
 fi
 
-URL="https://github.com/PasarGuard/subscription-template/releases/${RELEASE_PATH}/${LANG_CODE}.html"
+URL="https://github.com/Free-Guy-IR/subscription-template/releases/${RELEASE_PATH}/${LANG_CODE}.html"
 if [[ "${LANG_CODE}" == "fa" ]]; then
-  URL="https://github.com/PasarGuard/subscription-template/releases/${RELEASE_PATH}/index.html"
+  URL="https://github.com/Free-Guy-IR/subscription-template/releases/${RELEASE_PATH}/index.html"
 fi
 
 mkdir -p "${DEST_DIR}"

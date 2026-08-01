@@ -2,6 +2,8 @@
 
 Адаптивный шаблон страницы подписки для PasarGuard.
 
+> **Примечание:** Это форк [Free-Guy-IR](https://github.com/Free-Guy-IR) оригинального [шаблона подписки PasarGuard](https://github.com/PasarGuard/subscription-template), расширенный для поддержки дополнительных типов ядра этого форка: строка **OpenVPN Config** (скачивание + копирование, как у WireGuard) и строка **MTProto (Telegram-прокси)** (ссылки `tg://`, только копирование - без QR, так как эти ссылки не предназначены для сканирования).
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/en.png" alt="English UI" width="40%">
   <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/fa.png" alt="Persian UI" width="30%">
@@ -16,13 +18,15 @@
 - QR-код для ссылок подключения
 - Копирование ссылок и конфигов в один клик, а Base64 доступен только в QR-модальном окне
 - Ссылки WireGuard можно копировать как нативный конфиг и скачивать в формате `.conf`
+- У OpenVPN отдельная строка конфига (скачать `.ovpn` или скопировать) вместо обычной ссылки
+- Ссылки MTProto (Telegram-прокси, `tg://`) получают свою строку с реальным именем вместо общего запасного варианта
 - [Настройка внешнего вида](#appearance-customization)
 
 ## Совместимость
 
-| Версия шаблона подписки | Версия панели PasarGuard |
+| Версия шаблона подписки | Версия панели |
 | --- | --- |
-| `v2` | `v3` |
+| `v2` | `v3` (этот форк) |
 | Остальные версии | `v2`, `v1` |
 
 ## Быстрый старт (рекомендуется)
@@ -30,7 +34,7 @@
 Запустите скрипт установки (выберите язык по умолчанию):
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/PasarGuard/subscription-template/main/install.sh | sudo bash -s -- --lang ru
+curl -fsSL https://raw.githubusercontent.com/Free-Guy-IR/subscription-template/main/install.sh | sudo bash -s -- --lang ru
 ```
 
 Поддерживаемые значения `--lang`: `en`, `fa`, `zh`, `ru`
@@ -44,7 +48,7 @@ curl -fsSL https://raw.githubusercontent.com/PasarGuard/subscription-template/ma
 ```sh
 sudo mkdir -p /var/lib/pasarguard/templates/subscription
 sudo wget -O /var/lib/pasarguard/templates/subscription/index.html \
-https://github.com/PasarGuard/subscription-template/releases/latest/download/ru.html
+https://github.com/Free-Guy-IR/subscription-template/releases/latest/download/ru.html
 ```
 
 2. Настройте PasarGuard в `/opt/pasarguard/.env`:
@@ -63,7 +67,7 @@ pasarguard restart
 ## Сборка Из Исходников
 
 ```sh
-git clone https://github.com/PasarGuard/subscription-template.git
+git clone https://github.com/Free-Guy-IR/subscription-template.git
 cd subscription-template
 bun install
 bun run build
