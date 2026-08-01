@@ -65,7 +65,8 @@ export const useConfigData = () => {
             link.startsWith('shadowsocks://') ||
             link.startsWith('wireguard://') ||
             link.startsWith('hysteria2://') ||
-            link.startsWith('hysteria://')
+            link.startsWith('hysteria://') ||
+            link.startsWith('tg://')
           )
         )
       }
