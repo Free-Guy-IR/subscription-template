@@ -29,7 +29,8 @@
   },
   "config": {
     "title": "Ссылки конфигурации",
-    "subscriptionLink": "Ссылка подписки"
+    "subscriptionLink": "Ссылка подписки",
+    "openvpnConfig": "Конфигурация OpenVPN"
   },
   "usage": {
     "title": "Статистика использования",
@@ -95,7 +96,8 @@
     "downloadWireGuard": "Скачать WireGuard",
     "downloadOpenVPN": "Скачать OpenVPN",
     "downloadStarted": "Загрузка началась",
-    "downloadFailed": "Не удалось скачать конфиг"
+    "downloadFailed": "Не удалось скачать конфиг",
+    "copyOpenVPN": "Копировать конфиг OpenVPN"
   },
   "clipboard": {
     "copied": "Скопировано в буфер обмена!",

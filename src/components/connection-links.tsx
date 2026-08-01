@@ -116,11 +116,27 @@ export const ConnectionLinks = memo(({ links }: ConnectionLinksProps) => {
     }
   }, [subscriptionUrl, t]);
 
+  const handleCopyOpenVPN = useCallback(async () => {
+    try {
+      const response = await fetch(`${subscriptionUrl}/openvpn`);
+      if (!response.ok) {
+        throw new Error(`request failed: ${response.status}`);
+      }
+
+      const content = await response.text();
+      copyToClipboard(content, 'openvpn:config');
+    } catch (error) {
+      console.error('Failed to copy OpenVPN config:', error);
+      toast.error(t('configActions.downloadFailed'));
+    }
+  }, [subscriptionUrl, t, copyToClipboard]);
+
   const getProtocolBadge = useCallback((protocol: ParsedLink['protocol']) => {
     if (protocol === 'unknown') return 'SUB';
     if (protocol === 'shadowsocks') return 'SS';
     if (protocol === 'wireguard') return 'WG';
     if (protocol === 'hysteria') return 'HY2';
+    if (protocol === 'mtproto') return 'MTP';
     return protocol;
   }, []);
 
@@ -132,19 +148,6 @@ export const ConnectionLinks = memo(({ links }: ConnectionLinksProps) => {
           {t('config.title')}
         </h2>
         <div className="flex items-center gap-2">
-          {hasOpenVPN && (
-            <button
-              onClick={handleDownloadOpenVPN}
-              disabled={downloadingOpenVPN}
-              className="group cursor-pointer flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-lg bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-70 disabled:hover:scale-100"
-              title={t('configActions.downloadOpenVPN')}
-            >
-              <Download className="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5" />
-              <span className="transition-all duration-200 group-hover:translate-x-0.5">
-                {t('configActions.downloadOpenVPN')}
-              </span>
-            </button>
-          )}
           <button
             onClick={handleCopyAll}
             className={`group cursor-pointer flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 hover:shadow-lg ${copyAllSuccess
@@ -214,6 +217,48 @@ export const ConnectionLinks = memo(({ links }: ConnectionLinksProps) => {
             </div>
           </div>
         </div>
+
+        {/* OpenVPN Config */}
+        {hasOpenVPN && (
+          <div className="group relative p-3 rounded-lg border bg-card hover:border-primary/50 transition-all duration-200">
+            <div className="flex items-center gap-2">
+              <div className="page-badge px-2 py-0.5 rounded bg-primary text-primary-foreground shrink-0">
+                OVPN
+              </div>
+
+              <div className="page-item-title flex-1 min-w-0 truncate">
+                {t('config.openvpnConfig')}
+              </div>
+
+              <div className="flex gap-1 shrink-0">
+                <button
+                  onClick={handleDownloadOpenVPN}
+                  disabled={downloadingOpenVPN}
+                  className="p-1.5 rounded bg-muted hover:bg-secondary transition-all cursor-pointer disabled:opacity-70"
+                  title={t('configActions.downloadOpenVPN')}
+                >
+                  <Download className="w-3.5 h-3.5" />
+                </button>
+
+                <button
+                  onClick={handleCopyOpenVPN}
+                  className={`p-1.5 rounded transition-all cursor-pointer ${isCopied('openvpn:config')
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted hover:bg-primary hover:text-primary-foreground'
+                    }`}
+                  title={t('configActions.copyOpenVPN')}
+                >
+                  {isCopied('openvpn:config') ? (
+                    <Check className="w-3.5 h-3.5" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-2 xl:max-h-[400px] xl:overflow-y-auto xl:min-h-0">
           {parsedLinks.map((link, index) => {
             const copied = isCopied(`${link.raw}:config`);
@@ -265,13 +310,15 @@ export const ConnectionLinks = memo(({ links }: ConnectionLinksProps) => {
                       )}
                     </button>
 
-                    <button
-                      onClick={() => handleShowQR(link)}
-                      className="p-1.5 rounded bg-muted hover:bg-secondary transition-all cursor-pointer"
-                      title={t('qr.show')}
-                    >
-                      <ScanQrCode className="w-3.5 h-3.5" />
-                    </button>
+                    {link.protocol !== 'mtproto' && (
+                      <button
+                        onClick={() => handleShowQR(link)}
+                        className="p-1.5 rounded bg-muted hover:bg-secondary transition-all cursor-pointer"
+                        title={t('qr.show')}
+                      >
+                        <ScanQrCode className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

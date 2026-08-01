@@ -29,7 +29,8 @@
   },
   "config": {
     "title": "لینک کانفیگ ها",
-    "subscriptionLink": "لینک اشتراک"
+    "subscriptionLink": "لینک اشتراک",
+    "openvpnConfig": "کانفیگ OpenVPN"
   },
   "usage": {
     "title": "آمار مصرف",
@@ -95,7 +96,8 @@
     "downloadWireGuard": "دانلود WireGuard",
     "downloadOpenVPN": "دریافت کانفیگ OpenVPN",
     "downloadStarted": "دانلود شروع شد",
-    "downloadFailed": "خطا در دانلود کانفیگ"
+    "downloadFailed": "خطا در دانلود کانفیگ",
+    "copyOpenVPN": "کپی کانفیگ OpenVPN"
   },
   "clipboard": {
     "copied": "در کلیپ‌بورد کپی شد!",

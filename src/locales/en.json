@@ -29,7 +29,8 @@
   },
   "config": {
     "title": "Configuration Links",
-    "subscriptionLink": "Subscription Link"
+    "subscriptionLink": "Subscription Link",
+    "openvpnConfig": "OpenVPN Config"
   },
   "usage": {
     "title": "Usage Statistics",
@@ -95,7 +96,8 @@
     "downloadWireGuard": "Download WireGuard",
     "downloadOpenVPN": "Download OpenVPN",
     "downloadStarted": "Download started",
-    "downloadFailed": "Failed to download config"
+    "downloadFailed": "Failed to download config",
+    "copyOpenVPN": "Copy OpenVPN Config"
   },
   "clipboard": {
     "copied": "Copied to clipboard!",

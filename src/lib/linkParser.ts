@@ -1,6 +1,6 @@
 export interface ParsedLink {
   raw: string;
-  protocol: 'vless' | 'vmess' | 'trojan' | 'shadowsocks' | 'wireguard' | 'hysteria' | 'unknown';
+  protocol: 'vless' | 'vmess' | 'trojan' | 'shadowsocks' | 'wireguard' | 'hysteria' | 'mtproto' | 'unknown';
   name: string;
   server?: string;
   port?: string;
@@ -17,6 +17,7 @@ export function getProtocol(link: string): ParsedLink['protocol'] {
   if (link.startsWith('wireguard://')) return 'wireguard';
   if (link.startsWith('hysteria2://') || link.startsWith('hysteria://')) return 'hysteria';
   if (link.startsWith('ss://') || link.startsWith('shadowsocks://')) return 'shadowsocks';
+  if (link.startsWith('tg://')) return 'mtproto';
   return 'unknown';
 }
 
@@ -121,6 +122,7 @@ function generateCleanName(rawName: string, protocol: string, index: number): st
   const protocolLabel =
     protocol === 'wireguard' ? 'WireGuard' :
     protocol === 'hysteria' ? 'Hysteria 2' :
+    protocol === 'mtproto' ? 'MTProto' :
     protocol.toUpperCase();
 
   if (!rawName) {
